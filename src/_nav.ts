@@ -64,12 +64,12 @@ export default {
       },
       {
         name: 'Jobsites',
-        url: '/timesheet/union',
+        url: '/admin/jobsite',
         icon: 'icon-directions',
       },
       {
         name: 'Employees',
-        url: '/timesheet/union',
+        url: '/admin/employees',
         icon: 'icon-organization',
       },
       {
