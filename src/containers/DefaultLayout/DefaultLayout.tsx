@@ -21,6 +21,11 @@ import navigation from '../../_nav';
 // routes config
 import routes from '../../routes';
 
+const DefaultAside = React.lazy(() => import('./DefaultAside'));
+const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
+const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
+
+
 interface IDefaultLayoutProps{
     history:any
 }
@@ -35,7 +40,7 @@ class DefaultLayout extends Component<IDefaultLayoutProps, any> {
       <div className="app">
         <AppHeader fixed>
           <Suspense  fallback={this.loading()}>
-            <div>header</div>
+            <DefaultHeader/>
           </Suspense>
         </AppHeader>
         <div className="app-body">
@@ -72,13 +77,13 @@ class DefaultLayout extends Component<IDefaultLayoutProps, any> {
           </main>
           <AppAside fixed>
             <Suspense fallback={this.loading()}>
-              <div>Aside </div>
+              <DefaultAside />
             </Suspense>
           </AppAside>
         </div>
         <AppFooter>
           <Suspense fallback={this.loading()}>
-            <div>footer</div>>
+            <DefaultFooter/>
           </Suspense>
         </AppFooter>
       </div>
