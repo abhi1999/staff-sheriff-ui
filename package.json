@@ -27,6 +27,7 @@
     "flag-icon-css": "^3.4.5",
     "font-awesome": "^4.7.0",
     "http-server": "^0.12.1",
+    "logrocket": "^1.0.6",
     "node-sass": "^4.13.1",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
