@@ -6,11 +6,13 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import { CookiesProvider } from 'react-cookie';
 
-import LogRocket from 'logrocket';
+console.log('Printing all the environment variables', process.env)
+// import LogRocket from 'logrocket';
 // LogRocket.init('9mzoy6/afd-poc');
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<CookiesProvider><App /></CookiesProvider>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.

@@ -2,6 +2,9 @@ import React, { Component, Suspense } from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import * as router from 'react-router-dom';
 import { Container } from 'reactstrap';
+import { withRouter, RouteComponentProps } from "react-router";
+import { withCookies, ReactCookieProps } from 'react-cookie';
+import LogRocket from 'logrocket';
 
 import {
   AppAside,
@@ -20,22 +23,47 @@ import {
 import navigation from '../../_nav';
 // routes config
 import routes from '../../routes';
+import {AFDSESSION, AFDSESSIONVALUES} from "./../../constants/authentication";
+
 
 const DefaultAside = React.lazy(() => import('./DefaultAside'));
 const DefaultFooter = React.lazy(() => import('./DefaultFooter'));
 const DefaultHeader = React.lazy(() => import('./DefaultHeader'));
 
-
-interface IDefaultLayoutProps{
-    history:any
+interface IDefaultLayoutProps extends RouteComponentProps, ReactCookieProps{
 }
+interface IDefaultLayoutState {
+  validSession:boolean
+}
+class DefaultLayout extends Component<IDefaultLayoutProps, IDefaultLayoutState> {
 
-class DefaultLayout extends Component<IDefaultLayoutProps, any> {
-
-  loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
-
-
-  render() {
+  public constructor(props:IDefaultLayoutProps){
+    super(props);
+    this.state ={
+      validSession:false
+    }
+  }
+  private checkForValidSession = ()=>{
+    const { cookies, history } = this.props;
+    if(cookies){
+      const session = cookies.get(AFDSESSION);
+      if(AFDSESSIONVALUES.find(a=> a === session) !== undefined){
+        console.log('User has a valid session. Proceed with page- ' + atob(session));
+        LogRocket.identify(atob(session))
+        this.setState({validSession:true})
+      }else{
+        console.log('User does not have a valid session.  Redirecting to Login Page ')
+        history.push('/Login');
+        this.setState({validSession:false})
+      }
+    }  
+  }
+  public componentDidMount=()=>{
+    this.checkForValidSession();
+  }
+  private loading = () => <div className="animated fadeIn pt-1 text-center">Loading...</div>
+  public render() {
+    if(!this.state.validSession){return <div/>}
     return (
       <div className="app">
         <AppHeader fixed>
@@ -91,4 +119,4 @@ class DefaultLayout extends Component<IDefaultLayoutProps, any> {
   }
 }
 
-export default DefaultLayout;
+export default withCookies(withRouter(DefaultLayout));

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { HashRouter, Route, Switch } from 'react-router-dom';
-// import { renderRoutes } from 'react-router-config';
+import { withCookies, ReactCookieProps } from 'react-cookie';
+
 import './App.scss';
 
 const loading = () => <div className="animated fadeIn pt-3 text-center">Loading...</div>;
@@ -8,12 +9,17 @@ const loading = () => <div className="animated fadeIn pt-3 text-center">Loading.
 const DefaultLayout = React.lazy(() => import('./containers/DefaultLayout'));
 
 // Pages
-const Login = React.lazy(() => import('./views/Pages/Login'));
+const Login = React.lazy(() => import('./views/Pages/Login/Login'));
 const Register = React.lazy(() => import('./views/Pages/Register'));
 const Page404 = React.lazy(() => import('./views/Pages/Page404'));
 const Page500 = React.lazy(() => import('./views/Pages/Page500'));
 
-class App extends Component {
+interface IAppProps extends ReactCookieProps{
+}
+class App extends Component<IAppProps,any> {
+  public constructor(props:IAppProps){
+    super(props);
+  }
   public render() {
     return (
       <HashRouter>
@@ -31,4 +37,4 @@ class App extends Component {
   }
 }
 
-export default App;
+export default withCookies(App);
