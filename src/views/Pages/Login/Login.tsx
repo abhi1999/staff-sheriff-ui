@@ -1,40 +1,31 @@
 import React, { Component } from 'react';
+import { ReactCookieProps } from 'react-cookie';
+import { RouteComponentProps } from "react-router";
 import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
-import { Alert } from 'reactstrap';
-import { withCookies, ReactCookieProps } from 'react-cookie';
-import { RouteComponentProps } from "react-router";
-
+import {INotifyOptions} from "./../../../common";
 import {AFDSESSION, AFDSESSIONVALUES} from "./../../../constants/authentication"
-/*const AFDSESSION ="session-state-1";
-const AFDSESSIONVALUE ="uknFlkdnamdBeukndscfher==";
-*/
-interface ILoginProps extends RouteComponentProps, ReactCookieProps{
 
+interface ILoginProps extends RouteComponentProps, ReactCookieProps{
+  NotifyError:(notificationOptions:INotifyOptions)=>void;
+  NotifySuccess:(notificationOptions:INotifyOptions)=>void;
+  onLoginComplete:()=> void;
 }
 interface ILoginState{
   username:string,
   password:string,
-  showNotification:boolean
 }
 
 class Login extends Component<ILoginProps,ILoginState> {
   public constructor(props:ILoginProps){
     super(props);
-    
     this.state={
       username:'',
-      password:'',
-      showNotification:false
-     
-    }
+      password:''
+    };
   }
-  render() {
-    return (<React.Fragment>
-      {this.state.showNotification?<Alert color="danger">
-          Incorrect password. Try again.
-        </Alert>:""}
-      <div className="app flex-row align-items-center">
+  public render =()=> {
+    return (<div className="app flex-row align-items-center">
         <Container>
           <Row className="justify-content-center">
             <Col md="8">
@@ -89,28 +80,34 @@ class Login extends Component<ILoginProps,ILoginState> {
           </Row>
         </Container>
       </div>
-      </React.Fragment>
-
     );
   }
   private onLoginClicked=()=>{
     if(this.checkForCorrectPassword()){
-      const { cookies, history } = this.props;
-      var now = new Date();
-      var time = now.getTime();
-      var expireTime = time + 1000*60*60;
-      now.setTime(expireTime);
-      if(cookies) {console.log('setting cooki e'+ AFDSESSION, now)
-        cookies.set(AFDSESSION, btoa(this.state.password.toLowerCase()), { path: '/', expires:now });}
-        history.push('/');
+      this.props.NotifySuccess({message: "Login successful. Redirecting to main page"});
+      this.props.onLoginComplete();
+      setTimeout(()=>{this.redirectToMainPage()}, 1000)
     }else{
-      this.setState({showNotification:true});
+      this.props.NotifyError({message:"Incorrect Password"})
     }
    
   }
   private checkForCorrectPassword = ():boolean=>{
     return AFDSESSIONVALUES.find(a=> a=== btoa(this.state.password.toLowerCase())) !== undefined;
   }
+  private redirectToMainPage = ()=>{
+    const { cookies, history } = this.props;
+    var now = new Date();
+    var time = now.getTime();
+    var expireTime = time + 1000*60*60;
+    now.setTime(expireTime);
+    if(cookies) {
+      console.log('setting cooki e'+ AFDSESSION, now)
+      cookies.set(AFDSESSION, btoa(this.state.password.toLowerCase()), { path: '/', expires:now });
+    }
+    history.push('/');
+  }
 }
 
-export default withCookies(Login);
+
+export default Login;

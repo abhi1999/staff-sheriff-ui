@@ -3,6 +3,7 @@ import { AgGridReact } from "@ag-grid-community/react";
 import { AllCommunityModules } from "@ag-grid-community/all-modules";
 import "@ag-grid-community/all-modules/dist/styles/ag-grid.css";
 import "@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css";
+// import { S_IFBLK } from 'constants';
 
 var newCount = 1;
 function createNewRowData() {
@@ -120,9 +121,20 @@ export default class Employees extends Component<any, any> {
         var newItem = createNewRowData();
         this.gridApi.updateRowData({ add: [newItem] });
       }
+    private onButtonClick =()=>{
+      if(this.props.onRequestNewNumber){
+        this.props.onRequestNewNumber();
+        this.props.notifyInfo({message:'hi-'+ new Date()})
+      }
+      else {alert('no method found')}
+      /*<button onClick={this.onButtonClick}>Request new number</button>
+        {this.props.numberCollection? this.props.numberCollection.map((n:number)=> <li key={n}>{n}</li>):"no numbers"}
+        */
+    }
       public render() {
         return (
           <div style={{ width: "100%", height: "75vh" }}>
+            
             <div style={{ marginBottom: "5px" }}>
                 <button onClick={this.onAddRow.bind(this)}>Add Row</button>
            

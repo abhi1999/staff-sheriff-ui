@@ -50,7 +50,8 @@ class DefaultLayout extends Component<IDefaultLayoutProps, IDefaultLayoutState> 
       if(AFDSESSIONVALUES.find(a=> a === session) !== undefined){
         console.log('User has a valid session. Proceed with page- ' + atob(session));
         LogRocket.identify(atob(session))
-        this.setState({validSession:true})
+        this.setState({validSession:true});
+        // to do 
       }else{
         console.log('User does not have a valid session.  Redirecting to Login Page ')
         history.push('/Login');

@@ -1,3 +1,6 @@
 import Employees from "./Employees";
+import {EmployeesContainer} from "./EmployeesContainer"
 
-export default Employees;
+export { Employees};
+
+export default EmployeesContainer;

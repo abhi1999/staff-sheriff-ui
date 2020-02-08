@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { HashRouter, Route, Switch } from 'react-router-dom';
 import { withCookies, ReactCookieProps } from 'react-cookie';
-
+import Notifications from 'react-notification-system-redux';
+import {connect} from 'react-redux';
+import {IApplicationState} from "./reducers"
 import './App.scss';
 
 const loading = () => <div className="animated fadeIn pt-3 text-center">Loading...</div>;
@@ -9,12 +11,13 @@ const loading = () => <div className="animated fadeIn pt-3 text-center">Loading.
 const DefaultLayout = React.lazy(() => import('./containers/DefaultLayout'));
 
 // Pages
-const Login = React.lazy(() => import('./views/Pages/Login/Login'));
+const Login = React.lazy(() => import('./views/Pages/Login/index'));
 const Register = React.lazy(() => import('./views/Pages/Register'));
 const Page404 = React.lazy(() => import('./views/Pages/Page404'));
 const Page500 = React.lazy(() => import('./views/Pages/Page500'));
 
 interface IAppProps extends ReactCookieProps{
+  notifications:any
 }
 class App extends Component<IAppProps,any> {
   public constructor(props:IAppProps){
@@ -32,9 +35,36 @@ class App extends Component<IAppProps,any> {
 ]             <Route path="/" render={props => <DefaultLayout {...props}/>} />
             </Switch>
           </React.Suspense>
+          {this.renderNotification()}
       </HashRouter>
+    );
+  }
+  private renderNotification=()=>{
+    const {notifications} = this.props;
+    console.log('notifications', notifications)
+    //Optional styling
+    const style = {
+      NotificationItem: { // Override the notification item
+        DefaultStyle: { // Applied to every notification, regardless of the notification level
+          margin: '10px 5px 2px 1px'
+        },
+        success: { // Applied only to the success notification item
+          color: 'green'
+        },
+        error: { // Applied only to the error notification item
+          color: 'red'
+        }
+      }
+    };
+    return (
+      <Notifications
+        notifications={notifications}
+        style={style}
+      />
     );
   }
 }
 
-export default withCookies(App);
+export default connect(
+  (state:IApplicationState) => ({ notifications: state.notifications })
+)( withCookies(App));
