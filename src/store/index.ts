@@ -1,9 +1,9 @@
 import { createStore, compose, applyMiddleware, Middleware } from 'redux';
 import createSagaMiddleware from 'redux-saga';
+import { createLogger } from "redux-logger";
+import ReduxThunk from "redux-thunk";
 import { rootReducers } from '../reducers';
 import { rootSaga } from '../sagas';
-// import promise from "redux-promise-middleware";
-import ReduxThunk from "redux-thunk";
 
 const sagaMiddleware = createSagaMiddleware();
 declare const window:any;
@@ -26,8 +26,9 @@ sagaMiddleware.run(rootSaga);
 
 const configureStore =(preloadedState?:any)=>{
   const middleware:Middleware[] = [ReduxThunk, sagaMiddleware];
+
   if(process.env.NODE_ENV !== 'production') {
-       // middleware.push(createLogger());
+      middleware.push(createLogger());
   }
   const store = createStore(
       rootReducers, 

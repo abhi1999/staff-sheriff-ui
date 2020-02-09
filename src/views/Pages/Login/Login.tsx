@@ -4,7 +4,7 @@ import { RouteComponentProps } from "react-router";
 import { Link } from 'react-router-dom';
 import { Button, Card, CardBody, CardGroup, Col, Container, Form, Input, InputGroup, InputGroupAddon, InputGroupText, Row } from 'reactstrap';
 import {INotifyOptions} from "./../../../common";
-import {AFDSESSION, AFDSESSIONVALUES} from "./../../../constants/authentication"
+import {checkPassword, setSessionCookie} from "./../../../utils/authentications";
 
 interface ILoginProps extends RouteComponentProps, ReactCookieProps{
   NotifyError:(notificationOptions:INotifyOptions)=>void;
@@ -83,28 +83,17 @@ class Login extends Component<ILoginProps,ILoginState> {
     );
   }
   private onLoginClicked=()=>{
-    if(this.checkForCorrectPassword()){
+    if(checkPassword(this.state.password)){
       this.props.NotifySuccess({message: "Login successful. Redirecting to main page"});
       this.props.onLoginComplete();
-      setTimeout(()=>{this.redirectToMainPage()}, 1000)
+      setTimeout(()=>{this.setCookieAndRedirectToMainPage()}, 1000)
     }else{
       this.props.NotifyError({message:"Incorrect Password"})
     }
-   
   }
-  private checkForCorrectPassword = ():boolean=>{
-    return AFDSESSIONVALUES.find(a=> a=== btoa(this.state.password.toLowerCase())) !== undefined;
-  }
-  private redirectToMainPage = ()=>{
+  private setCookieAndRedirectToMainPage = ()=>{
     const { cookies, history } = this.props;
-    var now = new Date();
-    var time = now.getTime();
-    var expireTime = time + 1000*60*60;
-    now.setTime(expireTime);
-    if(cookies) {
-      console.log('setting cooki e'+ AFDSESSION, now)
-      cookies.set(AFDSESSION, btoa(this.state.password.toLowerCase()), { path: '/', expires:now });
-    }
+    setSessionCookie(this.state.password, cookies)
     history.push('/');
   }
 }
