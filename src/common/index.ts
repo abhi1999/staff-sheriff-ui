@@ -7,7 +7,9 @@ export const JobsiteGeneratorActions ={
     GET_LOOKUP_SITES_START:'[0] Request all jobsites async service',
     GET_LOOKUP_SITES_COMPLETED:'[1] sites async service returned data',
     CREATE_JOB_SITES_START:'[0] Request to create jobsiteasync service',
-    CREATE_JOB_SITES_COMPLETED:'[0] Request to create jobsiteasync service',
+    CREATE_JOB_SITES_COMPLETED:'[1] create jobsiteasync service returned data',
+    UPDATE_JOB_SITE_COMPLETED:"[1] UPDATE_JOB_SITE_COMPLETED",
+    UPDATE_JOB_SITE_START:"[0] UPDATE_JOB_SITE_START"
 }
 
 export const LookupGeneratorActions ={

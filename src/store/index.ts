@@ -27,9 +27,9 @@ sagaMiddleware.run(rootSaga);
 const configureStore =(preloadedState?:any)=>{
   const middleware:Middleware[] = [ReduxThunk, sagaMiddleware];
 
-  if(process.env.NODE_ENV !== 'production') {
+  // if(process.env.NODE_ENV !== 'production') {
       middleware.push(createLogger());
-  }
+  // }
   const store = createStore(
       rootReducers, 
       preloadedState,

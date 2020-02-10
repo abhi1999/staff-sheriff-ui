@@ -1,5 +1,5 @@
 import { call, put, takeEvery, all, fork  } from 'redux-saga/effects';
-import { getJobSites, createJobSite } from '../api';
+import { getJobSites, createJobSite, updateJobSiteById } from '../api';
 import { LookupActions } from '../actions/index';
 import {JobsiteGeneratorActions, LookupGeneratorActions, BaseAction}  from '../common';
 
@@ -23,6 +23,12 @@ function* watchJobsiteCreateRequestStart() {
       requestCreateJobSite
     );
 }
+function* watchJobsiteUpdateRequestStart() {
+  yield takeEvery(
+    JobsiteGeneratorActions.UPDATE_JOB_SITE_START,
+    requestUpdateJobSite
+  );
+}
 function* requestAllLookup(){
     console.log('All Lookup Start')
     yield requestAllJobSites();
@@ -35,17 +41,27 @@ function* requestAllJobSites() {
 }
 
 function* requestCreateJobSite(reduxAction:BaseAction) {
-    console.log('Jobsites Lookup Start')
+  debugger;
+    console.log('Create jobsite Start')
     const data = yield call(createJobSite, reduxAction.payload);
     yield put(LookupActions.createJobSitesCompleteAction(data));
     yield put(LookupActions.getJobSitesStartAction())
 }
 
+function* requestUpdateJobSite(reduxAction:BaseAction) {
+  debugger;
+  console.log('update jobsite Start')
+  const {payload}= reduxAction
+  const data = yield call(updateJobSiteById, payload.id, payload.data);
+  yield put(LookupActions.updateJobSitesCompleteAction(data));
+  yield put(LookupActions.getJobSitesStartAction())
+}
 
 export default function* rootSaga() {
     yield all([
         fork(watchJobsiteLookupRequestStart),
         fork(watchAllLookupStartStart),
-        fork(watchJobsiteCreateRequestStart)
+        fork(watchJobsiteCreateRequestStart),
+        fork(watchJobsiteUpdateRequestStart)
     ]);
 }

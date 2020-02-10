@@ -25,3 +25,13 @@ export const createJobSitesCompleteAction = (jobsite:any): BaseAction => ({
     type: JobsiteGeneratorActions.CREATE_JOB_SITES_COMPLETED,
     payload: jobsite,
 });
+
+export const updateJobSitesStartAction = (id:string, data:any): BaseAction => ({
+    type: JobsiteGeneratorActions.UPDATE_JOB_SITE_START,
+    payload: {id, data},
+});
+  
+export const updateJobSitesCompleteAction = (jobsite:any): BaseAction => ({
+    type: JobsiteGeneratorActions.UPDATE_JOB_SITE_COMPLETED,
+    payload: jobsite,
+});

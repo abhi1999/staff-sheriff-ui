@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
 import { AgGridReact } from "@ag-grid-community/react";
-import { AllCommunityModules } from "@ag-grid-community/all-modules";
+// import { AllCommunityModules } from "@ag-grid-community/all-modules";
 import "@ag-grid-community/all-modules/dist/styles/ag-grid.css";
 import "@ag-grid-community/all-modules/dist/styles/ag-theme-balham.css";
+import { AllModules } from "@ag-grid-enterprise/all-modules";
 
 interface ITableViewProps{
     data:any[],
     columnDefs:any[]
+    onAdd:()=>void;
+    onUpdate:(id:string, data:any)=>void;
+    getContextMenuItems:(params:any)=>any[];
 }
 
 export default class TableView extends Component<ITableViewProps, any> {
@@ -15,7 +19,7 @@ export default class TableView extends Component<ITableViewProps, any> {
     public constructor(props:ITableViewProps){
         super(props);
         this.state ={
-            modules: AllCommunityModules,
+            modules: AllModules,
             columnDefs:props.columnDefs,
             defaultColDef: {
                 editable: true,
@@ -24,12 +28,19 @@ export default class TableView extends Component<ITableViewProps, any> {
               },
               rowData:props.data,
               getRowNodeId: function(data:any) {
-                return data.id;
+                return data._id;
               }
         }
     }
     public render(){
-        return (<div style={{ height: "calc(100vh - 25px)" }}>
+        return (
+        <React.Fragment>
+           <div style={{ marginBottom: "5px" }}>
+                <button onClick={()=>this.props.onAdd()}>Add Row</button>
+           
+            </div>
+        
+        <div style={{ height: "calc(100vh - 25px)" }}>
         <div
           id="myGrid"
           style={{
@@ -46,10 +57,13 @@ export default class TableView extends Component<ITableViewProps, any> {
             animateRows={true}
             getRowNodeId={this.state.getRowNodeId}
             onGridReady={this.onGridReady}
+            editType= "fullRow"
+            onRowValueChanged={(row)=>{console.log('iwaschanged', row.data); this.props.onUpdate(row.data._id, row.data)}}
+            getContextMenuItems={this.props.getContextMenuItems}
           />
         </div>
       </div>
-        )
+      </React.Fragment>  )
     }
     private  onGridReady =(params:any)=> {
         this.gridApi = params.api;

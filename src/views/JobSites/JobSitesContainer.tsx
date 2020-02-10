@@ -11,14 +11,20 @@ const mapStateToProps = (state: IApplicationState, ownProps?:any) => ({
         headerName: "Name",
         field: "name"
       },{
+        headerName: "Location",
+        field: "location"
+      },{
         headerName: "Id",
-        field: "_id"
+        field: "_id",
+        editable:false
       },{
         headerName: "Created On",
-        field: "createDate"
+        field: "createDate",
+        editable:false
       },{
         headerName: "Last Update",
-        field: "lastUpdate"
+        field: "lastUpdate",
+        editable:false
       }],
     numberCollection: state.numberCollection,
     ...ownProps
@@ -28,10 +34,30 @@ const mapStateToProps = (state: IApplicationState, ownProps?:any) => ({
 const mapDispatchToProps = (dispatch: any)  => ({
   NotifyError: (notification:INotifyOptions) => dispatch(NotificationActions.NotifyError(notification)),
   NotifySuccess: (notification:INotifyOptions) => dispatch(NotificationActions.NotifySuccess(notification)),
+  getContextMenuItems:(params:any)=>{
+    console.log('params for context menyu', params)
+    return [{
+        name: "Delete ",
+        action: function() {
+          if(params && params.node && params.node.data && params.node.data.id){
+            dispatch(NotificationActions.NotifyError({message:"Deleting record -" + params.node.data.id}))
+            // dispatch(LookupActions.deleteJobSitesStartAction(params.node.data.id));
+          }
+        },
+        cssClasses: ["redFont", "bold"]
+      },
+    ]
+  },
   onLoginComplete:()=>{
     dispatch(NotificationActions.NotifySuccess({message:'Login Complete.  Loading the data'}));
     dispatch(LookupActions.getAllLookupAction());
     // start initializing the state
+  },
+  onAdd:()=>{
+    dispatch(LookupActions.createJobSitesStartAction({name:''}));
+  },
+  onUpdate:(id:string, row:any)=>{
+    dispatch(LookupActions.updateJobSitesStartAction(id, row));
   }
 });
 

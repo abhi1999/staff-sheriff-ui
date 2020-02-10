@@ -115,6 +115,7 @@ export default class Employees extends Component<any, any> {
     private  onGridReady =(params:any)=> {
         this.gridApi = params.api;
         this.gridColumnApi = params.columnApi;
+        params.api.sizeColumnsToFit();;
     };
 
     private onAddRow=()=> {
@@ -156,6 +157,7 @@ export default class Employees extends Component<any, any> {
                   animateRows={true}
                   getRowNodeId={this.state.getRowNodeId}
                   onGridReady={this.onGridReady}
+                  editType= "fullRow"
                 />
               </div>
             </div>
