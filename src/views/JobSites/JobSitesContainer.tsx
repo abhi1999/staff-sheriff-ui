@@ -23,7 +23,7 @@ const mapStateToProps = (state: IApplicationState, ownProps?:any) => ({
         editable:false
       },{
         headerName: "Last Update",
-        field: "lastUpdate",
+        field: "updateDate",
         editable:false
       }],
     numberCollection: state.numberCollection,
@@ -46,6 +46,8 @@ const mapDispatchToProps = (dispatch: any)  => ({
         },
         cssClasses: ["redFont", "bold"]
       },
+      "copy",
+      "separator"
     ]
   },
   onLoginComplete:()=>{
